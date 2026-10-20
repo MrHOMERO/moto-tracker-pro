@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracker Pro - Control Center</title>
+    <!-- Tailwind CSS para diseño moderno -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Leaflet CSS para mapas interactivos modernos -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map { height: 100vh; width: 100%; position: absolute; top: 0; left: 0; z-index: 0; }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans overflow-hidden">
+
+    <!-- Mapa interactivo de fondo -->
+    <div id="map"></div>
+
+    <!-- Interfaz de Control Flotante (Supermoderna) -->
+    <div class="relative z-10 flex flex-col justify-between h-screen p-4 md:p-6 pointer-events-none">
+        
+        <!-- Header superior -->
+        <header class="flex justify-between items-center glass-panel p-4 rounded-2xl pointer-events-auto shadow-2xl">
+            <div class="flex items-center space-x-3">
+                <div class="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
+                <h1 class="font-bold tracking-wider text-sm md:text-base text-slate-200">TRACKER PRO <span class="text-xs text-emerald-400 font-normal">| SEGURO</span></h1>
+            </div>
+            <div class="flex items-center space-x-2 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-800 text-xs">
+                <span class="text-slate-400">Batería:</span>
+                <span id="battery-status" class="font-semibold text-emerald-400">85% (OK)</span>
+            </div>
+        </header>
+
+        <!-- Panel de Acciones Inferior -->
+        <div class="glass-panel p-6 rounded-3xl pointer-events-auto shadow-2xl space-y-4 max-w-md mx-auto w-full mb-2">
+            
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-bold text-white">Estado del Dispositivo</h2>
+                    <p class="text-xs text-slate-400">Modo reposo profundo activo (Invisible)</p>
+                </div>
+                <span class="px-3 py-1 rounded-full text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">En Espera</span>
+            </div>
+
+            <!-- Botón Principal de Emergencia (Modo Pánico) -->
+            <button onclick="activarModoRobo()" class="w-full bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-red-900/40 transition-all duration-300 transform active:scale-95 flex items-center justify-center space-x-3 cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span class="tracking-wide">¡ACTIVAR RASTREO Y CÁMARA!</span>
+            </button>
+
+            <!-- Acciones secundarias -->
+            <div class="grid grid-cols-2 gap-3 pt-2">
+                <button onclick="solicitarFoto()" class="bg-slate-800/80 hover:bg-slate-700 border border-slate-700/50 text-slate-200 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all flex items-center justify-center space-x-2 cursor-pointer">
+                    <span>📸 Capturar Foto</span>
+                </button>
+                <button onclick="verHistorial()" class="bg-slate-800/80 hover:bg-slate-700 border border-slate-700/50 text-slate-200 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all flex items-center justify-center space-x-2 cursor-pointer">
+                    <span>📍 Última Ruta</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Inicializar el mapa centrado en coordenadas de referencia (ej. Paysandú, Uruguay)
+        var map = L.map('map', {zoomControl: false}).setView([-32.3214, -58.0756], 15);
+
+        // Capa de mapa oscura y moderna (CartoDB Dark Matter)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19,
+            subdomains: 'abcd'
+        }).addTo(map);
+
+        // Marcador simulado de la moto
+        var marker = L.marker([-32.3214, -58.0756]).addTo(map)
+            .bindPopup('<b>Mi Moto (Baúl)</b><br>Estado: Seguro y en reposo.');
+
+        function activarModoRobo() {
+            if(confirm("¿Estás seguro de activar el modo emergencia? La placa encenderá el GPS continuo.")) {
+                alert("¡Señal enviada! Despertando dispositivo bajo el asiento...");
+                marker.setLatLng([-32.3250, -58.0800]); // Simula cambio de posición
+                map.setView([-32.3250, -58.0800], 16);
+            }
+        }
+
+        function solicitarFoto() {
+            alert("Solicitud enviada a la cámara. Recibirás la captura en segundos.");
+        }
+    </script>
+</body>
+</html>
